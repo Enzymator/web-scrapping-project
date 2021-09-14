@@ -21,8 +21,8 @@ services:
     ports:
         - 9000:5000 
     environment: 
-      - MONGO_HOST = mongo
-      - MONGO_PORT = mongo
+      - MONGO_HOST=mongo
+      - MONGO_PORT=mongo
     restart:
         unless-stopped
 

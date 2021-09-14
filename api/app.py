@@ -2,23 +2,39 @@ from flask import Flask, request, jsonify
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 import os
+import pymongo
 
 app = Flask(__name__)
 #app.config["MONGO_URI"] = "mongodb://localhost:27017/api_py"
 #app.config["MONGO_URI"] = "mongodb://mongo/api_py"
 # mongo_host = os.environ["MONGO_HOST"]
 # mongo_port = os.environ["MONGO_PORT"]
-mongo_host = "localhost"
-mongo_port = "27017"
+# mongo_host = "localhost"
+# mongo_port = "27017"
 
-app.config["MONGO_URI"] = f"mongodb://{mongo_host}:{mongo_port}/api_python"
+# app.config["MONGO_URI"] = f"mongodb://{mongo_host}:{mongo_port}/api_python"
 
-mongo = PyMongo(app)
+# mongo = PyMongo(app)
+
+myclient = pymongo.MongoClient("mongodb://localhost:27017/api_python")
+mydb = myclient["mydatabase"]
+mycol = mydb["customers"]
 
 
-@app.route("/hello", methods=["GET"])
-def hello():
-    return "hello"
+@app.route("/ajoutvol", methods=["POST"])
+def ajouter_vol():
+    # new_user = request.get_json()
+    mydict = { "name": "John", "address": "Highway 37" }
+
+    x = mycol.insert_one(mydict)
+    return jsonify({'ok': True, 'message': 'user added'}), 200
+
+
+
+@app.route("/", methods=["GET"])
+def racince():
+    return "Salut Esperance"
+
 
 @app.route("/bonjour", methods=["GET"])
 def bonjour():
@@ -27,15 +43,14 @@ def bonjour():
 
 
 
-@app.route("/ajoutvol", methods=["POST"])
-def ajouter_vol():
-    # new_user = request.get_json()
-    new_vol = {
-        "numero": "43"
-    }
-    mongo.demo.vol.insert_one(new_vol)
-    return jsonify({'ok': True, 'message': 'user added'}), 200
-
+# @app.route("/ajoutvol", methods=["POST"])
+# def ajouter_vol():
+#     # new_user = request.get_json()
+#     new_vol = {
+#         "numero": "43"
+#     }
+#     mongo.db.demo.insert_one(new_vol)
+#     return jsonify({'ok': True, 'message': 'user added'}), 200
 
 # @app.route("/api/utilisateurs", methods=["GET"])
 # def afficher_alluser():
